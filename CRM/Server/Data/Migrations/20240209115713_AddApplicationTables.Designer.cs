@@ -4,6 +4,7 @@ using CRM.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRM.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240209115713_AddApplicationTables")]
+    partial class AddApplicationTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,26 +94,6 @@ namespace CRM.Server.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "c19de6c2-35a1-470f-9e0a-5cabf67d1afc",
-                            Email = "admin@localhost.com",
-                            EmailConfirmed = false,
-                            FirstName = "Admin",
-                            LastName = "User",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@LOCALHOST.COM",
-                            NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEI1kWN7ZwKah05B1bhzKghOefGFO8OPxUsabUDDM6KNK+84chjLWSL9pXGHYBNylDA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "7af591bb-49e8-4702-80e8-0f5be767ff5b",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@localhost.com"
-                        });
                 });
 
             modelBuilder.Entity("CRM.Shared.Domain.Booking", b =>
@@ -180,26 +163,6 @@ namespace CRM.Server.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Colours");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9471),
-                            DateUpdated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9483),
-                            Name = "Black",
-                            UpdatedBy = "System"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9485),
-                            DateUpdated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9486),
-                            Name = "Blue",
-                            UpdatedBy = "System"
-                        });
                 });
 
             modelBuilder.Entity("CRM.Shared.Domain.Customer", b =>
@@ -265,26 +228,6 @@ namespace CRM.Server.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Makes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9791),
-                            DateUpdated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9792),
-                            Name = "BMW",
-                            UpdatedBy = "System"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9793),
-                            DateUpdated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9794),
-                            Name = "Toyota",
-                            UpdatedBy = "System"
-                        });
                 });
 
             modelBuilder.Entity("CRM.Shared.Domain.Model", b =>
@@ -313,44 +256,6 @@ namespace CRM.Server.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Models");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9979),
-                            DateUpdated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9979),
-                            Name = "3 Series",
-                            UpdatedBy = "System"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9980),
-                            DateUpdated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9981),
-                            Name = "X5",
-                            UpdatedBy = "System"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9982),
-                            DateUpdated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9983),
-                            Name = "Prius",
-                            UpdatedBy = "System"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9984),
-                            DateUpdated = new DateTime(2024, 2, 9, 20, 43, 19, 786, DateTimeKind.Local).AddTicks(9984),
-                            Name = "Rav4",
-                            UpdatedBy = "System"
-                        });
                 });
 
             modelBuilder.Entity("CRM.Shared.Domain.Vehicle", b =>
@@ -565,20 +470,6 @@ namespace CRM.Server.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ad2bcf0c-20db-474f-8407-5a6b159518ba",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "bd2bcf0c-20db-474f-8407-5a6b159518bb",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -668,13 +559,6 @@ namespace CRM.Server.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "3781efa7-66dc-47f0-860f-e506d04102e4",
-                            RoleId = "ad2bcf0c-20db-474f-8407-5a6b159518ba"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
