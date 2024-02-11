@@ -6,6 +6,13 @@
 <h3 class="card-title">Car Bookings</h3>
 <br />
 
+<a href="/bookings/create" class="btn btn-secondary">
+    <span class="oi oi-plus"></span>
+    Create New Booking
+</a>
+<br />
+<br />
+
 @if (Bookings == null)
 {
     <div class="alert alert-info">Loading Bookings...</div>
@@ -30,13 +37,14 @@ else
                     <td>@Booking.Id</td>
                     <td>@Booking.Customer.DrivingLicense</td>
                     <td>@Booking.DateCreated.Date.ToString("dd MMMM yyyy")</td>
-                    <td>@((Booking.DateIn - Booking.DateOut).TotalDays.ToString())</td>
+                    @* <td>@(Booking.DateIn != nullDT ? (Booking.DateIn - Booking.DateOut).TotalDays.ToString() : "To Be Determined") </td> *@
+                    <td>@(Booking.DateIn != null ? (Booking.DateIn.Value - Booking.DateOut).TotalDays.ToString() : "To Be Determined")</td>
                     <td>@Booking.Vehicle.LicensePlateNumber</td>
                     <td>
-                        <a href="/Bookings/view/@Booking.Id" class="btn btn-primary">
+                        <a href="/bookings/view/@Booking.Id" class="btn btn-primary">
                             <span class="oi oi-book"></span>
                         </a>
-                        <a href="/Bookings/edit/@Booking.Id" class="btn btn-warning">
+                        <a href="/bookings/edit/@Booking.Id" class="btn btn-warning">
                             <span class="oi oi-pencil"></span>
                         </a>
                         <button class="btn btn-danger" @onclick="@(()=>Delete(Booking.Id))">
@@ -51,6 +59,8 @@ else
 
 @code {
     private List<Booking>? Bookings;
+
+    private DateTime nullDT = new DateTime(1, 1, 1, 0, 0, 0);
 
     protected async override Task OnInitializedAsync()
     {
