@@ -1,0 +1,30 @@
+﻿@page "/blogcategorys/edit/{id:int}"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3 class="card-title">Edit Blog Category</h3>
+<hr />
+<br />
+
+
+<FormComponent ButtonText="Update" OnValidSubmit="EditBlogcategory" blogcategory="blogcategory" />
+
+
+@code {
+    [Parameter] public int id { get; set; }
+
+    Blogcategory? blogcategory = new Blogcategory();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        blogcategory = await
+        _client.GetFromJsonAsync<Blogcategory>($"{Endpoints.BlogcategorysEndpoint}/{id}");
+    }
+
+    async Task EditBlogcategory()
+    {
+        await _client.PutAsJsonAsync($"{Endpoints.BlogcategorysEndpoint}/{id}", blogcategory);
+        _navManager.NavigateTo("/blogcategorys/");
+    }
+
+}

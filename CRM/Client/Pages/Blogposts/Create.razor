@@ -1,0 +1,39 @@
+﻿@page "/blogposts/create/"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3 class="card-title">Create New Blogpost</h3>
+<hr />
+<br />
+
+<FormComponent ButtonText="Create Blogpost" blogpost="blogpost" OnValidSubmit="@CreateBlogpost" />
+
+@* <EditForm Model="@blogpost" OnValidSubmit="CreateBlogpost">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Name: </label>
+        <div>
+            <InputText @bind-Value="@blogpost.Name" class="form-control" />
+            <ValidationMessage For="@(() => blogpost.Name)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-block">
+        Create Blogpost
+    </button>
+
+</EditForm> *@
+
+@code {
+
+    Blogpost blogpost = new Blogpost();
+
+    private async Task CreateBlogpost()
+    {
+        await _client.PostAsJsonAsync(Endpoints.BlogpostsEndpoint, blogpost);
+
+        _navManager.NavigateTo($"/blogposts/");
+    }
+}

@@ -1,0 +1,94 @@
+﻿@page "/blogposts/"
+@inject HttpClient _client
+@inject IJSRuntime js
+@attribute [Authorize]
+@inject HttpInterceptorService _interceptor
+@implements IDisposable
+
+<h3 class="card-title">Car Blogposts</h3>
+<br />
+
+<a href="/blogposts/create" class="btn btn-secondary">
+    <span class="oi oi-plus"></span>
+    Create New Blog Post
+</a>
+<br />
+<br />
+
+@if (Blogposts == null)
+{
+    <div class="alert alert-info">Loading Blogposts...</div>
+}
+else
+{
+    <table class="table table-responsive" id="blogpostsTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>     </th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Date Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var blogpost in Blogposts)
+            {
+                <tr>
+                    <td>@blogpost.Title</td>
+                    <td><img src="@blogpost.Image" width="100" /></td>
+                    <td>@blogpost.Category.Name</td>
+                    <td>@blogpost.Description</td>
+                    <td>@blogpost.DateCreated</td>
+                    <td>
+                        <a href="/blogposts/view/@blogpost.Url" class="btn btn-primary">
+                            <span class="oi oi-book"></span>
+                        </a>
+                        <a href="/blogposts/edit/@blogpost.Id" class="btn btn-warning">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(blogpost.Id))">
+                            <span class="oi oi-delete"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Blogpost>? Blogposts;
+
+    protected async override Task OnInitializedAsync()
+    {
+        _interceptor.MonitorEvent();
+        Blogposts = await _client.GetFromJsonAsync<List<Blogpost>>($"{Endpoints.BlogpostsEndpoint}");
+    }
+
+    async Task Delete(int blogpostId)
+    {
+        if (Blogposts != null)
+        {
+            var blogpost = Blogposts.First(q => q.Id == blogpostId);
+            var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {blogpost.Title}?");
+            if (confirm)
+            {
+                await _client.DeleteAsync($"{Endpoints.BlogpostsEndpoint}/{blogpostId}");
+                await OnInitializedAsync();
+            }
+        }
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await js.InvokeVoidAsync("AddDataTable", "#blogpostsTable");
+    }
+
+    public void Dispose()
+    {
+        _interceptor.DisposeEvent();
+        js.InvokeVoidAsync("DataTablesDispose", "#blogpostsTable");
+    }
+}

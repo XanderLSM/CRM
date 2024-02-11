@@ -1,0 +1,117 @@
+﻿@inject HttpClient _client
+@using Markdig
+
+<EditForm Model="@blogpost" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <fieldset disabled="@Disabled">
+        @* <div class="form-group">
+            <label>Name: </label>
+            <div>
+                <InputText @bind-Value="@blogpost.Name" class="form-control" />
+                <ValidationMessage For="@(() => blogpost.Name)" />
+            </div>
+        </div> *@
+
+        <div class="form-group">
+        <label>Author:</label>
+        <div>
+        <InputText @bind-Value="blogpost.Author" class="form-control" />
+        <ValidationMessage For="@(() => blogpost.Author)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Category: </label>
+            <div>
+                <InputSelect @bind-Value="blogpost.CategoryId" class="form-control">
+                    <option value="">-- Select Category --</option>
+                    @if ( Blogcategorys != null)
+                    {
+                        foreach (var blogcategory in Blogcategorys)
+                        {
+                            <option value="@blogcategory.Id">@blogcategory.Name</option>
+                        }
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => blogpost.CategoryId)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Title: </label>
+            <div>
+                <InputText @bind-Value="@blogpost.Title" class="form-control" />
+                <ValidationMessage For="@(() => blogpost.Title)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Url: </label>
+            <div>
+                <InputText @bind-Value="@blogpost.Url" class="form-control" />
+                <ValidationMessage For="@(() => blogpost.Url)" />
+            </div>
+        </div>
+
+        <div class="form-control-file">
+            <label>Image</label>
+            <InputFile OnChange="OnFileChange" />
+        </div>
+
+        <div class="form-group">
+            <label>Description: </label>
+            <div>
+                <InputText @bind-Value="@blogpost.Description" class="form-control" />
+                <ValidationMessage For="@(() => blogpost.Description)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Content: </label>
+            <div>
+                <InputText @bind-Value="@blogpost.Content" class="form-control" />
+                <ValidationMessage For="@(() => blogpost.Content)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Content Preview:</label>
+            <div id="contentPreview" style="height: 100%" class="form-control">@((MarkupString)Markdown.ToHtml(blogpost.Content ?? string.Empty))</div>
+        </div>
+
+    </fieldset>
+
+    @if (!Disabled)
+    {
+        <button type="submit" class="btn btn-success btn-block">
+            @ButtonText
+        </button>
+    }
+    <BackToList Target="blogposts" />
+</EditForm>
+
+@code {
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public Blogpost? blogpost { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    private IList<Blogcategory>? Blogcategorys;
+
+    protected async override Task OnInitializedAsync()
+    {
+        Blogcategorys = await _client.GetFromJsonAsync<List<Blogcategory>>($"{Endpoints.BlogcategorysEndpoint}");
+    }
+
+    async Task OnFileChange(InputFileChangeEventArgs e) //OnFileChange: Handles image file uploads, resizing the image and converting it to a base64 string to be stored in newBlogPost.Image.
+    {
+        var format = "image/png";
+        var resizedImage = await e.File.RequestImageFileAsync(format, 1060, 1060);
+        var buffer = new byte[resizedImage.Size];
+        await resizedImage.OpenReadStream().ReadAsync(buffer);
+        var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        blogpost.Image = imageData;
+    }
+}

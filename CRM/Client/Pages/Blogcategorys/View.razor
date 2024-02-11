@@ -1,0 +1,14 @@
+﻿@page "/blogcategorys/view/{id:int}"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+<h3>View</h3>
+<FormComponent blogcategory="blogcategory" Disabled="true" />
+@code {
+    [Parameter] public int id { get; set; }
+    Blogcategory? blogcategory = new Blogcategory();
+    protected async override Task OnParametersSetAsync()
+    {
+        blogcategory = await
+        _client.GetFromJsonAsync<Blogcategory>($"{Endpoints.BlogcategorysEndpoint}/{id}");
+    }
+}

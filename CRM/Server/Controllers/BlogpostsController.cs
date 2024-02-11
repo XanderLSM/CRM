@@ -35,7 +35,7 @@ namespace CRM.Server.Controllers
             //    return NotFound();
             //}
             //  return await _context.Blogposts.ToListAsync();
-            var blogposts = await _unitOfWork.Blogposts.GetAll();
+            var blogposts = await _unitOfWork.Blogposts.GetAll(includes: q => q.Include(x => x.Category));
             return Ok(blogposts);
 
         }
@@ -45,7 +45,8 @@ namespace CRM.Server.Controllers
         //public async Task<ActionResult<Blogpost>> GetBlogpost(int id)
         public async Task<IActionResult> GetBlogpost(int id)
         {
-            var blogpost = await _unitOfWork.Blogposts.Get(q => q.Id == id);
+            var blogpost = await _unitOfWork.Blogposts.Get(q => q.Id == id,
+                includes: q => q.Include(x => x.Category));
 
             if (blogpost == null)
             {
@@ -68,6 +69,17 @@ namespace CRM.Server.Controllers
             //  return blogpost;
         }
 
+        [HttpGet("slug/{slug}")]
+        public async Task<IActionResult> GetBlogpostBySlug(string slug)
+        {
+            var blogpost = await _unitOfWork.Blogposts.Get(q => q.Url == slug);
+            if (blogpost == null)
+            {
+                return NotFound();
+            }
+            return Ok(blogpost);
+        }
+
         // PUT: api/Blogposts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -79,6 +91,12 @@ namespace CRM.Server.Controllers
             }
 
             //_context.Entry(blogpost).State = EntityState.Modified;
+
+            if (!await IsSlugUniqueInternal(blogpost.Url, blogpost.Id))
+            {
+                return BadRequest("The provided slug is already in use.");
+            }
+
             _unitOfWork.Blogposts.Update(blogpost);
 
             try
@@ -107,6 +125,16 @@ namespace CRM.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Blogpost>> PostBlogpost(Blogpost blogpost)
         {
+            // Automatically generate slug if not provided
+            if (string.IsNullOrWhiteSpace(blogpost.Url))
+            {
+                blogpost.Url = GenerateSlug(blogpost.Title); // Implement this based on your slugification logic
+            }
+            else if (!await IsSlugUniqueInternal(blogpost.Url))
+            {
+                return BadRequest("The provided slug is already in use.");
+            }
+
             await _unitOfWork.Blogposts.Insert(blogpost);
             await _unitOfWork.Save(HttpContext);
             //if (_context.Blogposts == null)
@@ -148,6 +176,32 @@ namespace CRM.Server.Controllers
             var blogpost = await _unitOfWork.Blogposts.Get(q => q.Id == id);
             return blogpost != null;
             //return (_context.Blogposts?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        //private async Task<bool> IsSlugUniqueInternal(string slug, int? id = null)
+        //{
+        //    var blogpost = await _unitOfWork.Blogposts.Get(q => q.Url == slug);
+        //    if (blogpost != null)
+        //    {
+        //        // If an ID is provided, check if the found blogpost is the same as the one being updated
+        //        if (id != null && blogpost.Id == id) return true;
+        //        return false; // Slug exists and does not belong to the blogpost being updated
+        //    }
+        //    return true; // Slug is unique
+        //}
+
+        private async Task<bool> IsSlugUniqueInternal(string slug, int? id = null)
+        {
+            var blogpost = await _unitOfWork.Blogposts.Get(q => q.Url == slug);
+            return blogpost == null || (id != null && blogpost.Id == id);
+        }
+
+
+        private string GenerateSlug(string title)
+        {
+            // Simple slug generation: replace spaces with hyphens and convert to lowercase
+            // Consider more robust slugification to handle special characters, multiple spaces, etc.
+            return title.ToLower().Replace(" ", "-");
         }
     }
 }

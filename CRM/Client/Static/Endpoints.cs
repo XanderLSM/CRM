@@ -15,5 +15,8 @@ namespace CRM.Client.Static
         public static readonly string VehiclesEndpoint = $"{Prefix}/vehicles";
         public static readonly string CustomersEndpoint = $"{Prefix}/customers";
         public static readonly string BookingsEndpoint = $"{Prefix}/bookings";
+        public static readonly string BlogpostsEndpoint = $"{Prefix}/blogposts";
+        public static readonly string BlogcategorysEndpoint = $"{Prefix}/blogcategorys";
+        public static readonly string BlogcommentsEndpoint = $"{Prefix}/blogcomments";
     }
 }

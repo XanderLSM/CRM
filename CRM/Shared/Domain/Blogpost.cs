@@ -22,5 +22,6 @@ namespace CRM.Shared.Domain
         public virtual Blogcategory? Category { get; set; }
 
         public int? CategoryId { get; set; }
+
     }
 }

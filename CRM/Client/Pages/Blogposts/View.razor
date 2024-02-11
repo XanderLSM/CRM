@@ -1,0 +1,72 @@
+﻿@page "/blogposts/view/{Url}"
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+<style>
+    .blogpost-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .blogpost-image {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 20px auto;
+    }
+
+    .blogpost-title {
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .blogpost-meta,
+    .blogpost-content {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #666;
+    }
+
+    .blogpost-meta {
+        font-style: italic;
+    }
+
+    .blogpost-content {
+        text-align: justify;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string Url { get; set; }
+
+    private Blogpost Blogpost;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Url))
+        {
+            Blogpost = await HttpClient.GetFromJsonAsync<Blogpost>($"api/Blogposts/slug/{Url}");
+        }
+    }
+}
+
+@if (Blogpost != null)
+{
+    <div class="blogpost-container">
+        <h2 class="blogpost-title">@Blogpost.Title</h2>
+        <img src="@Blogpost.Image" class="blogpost-image" alt="Blog Post Image" />
+        <div class="blogpost-content">@Blogpost.Description</div>
+        <div class="blogpost-content">@Blogpost.Content</div>
+        <div class="blogpost-meta">Author: @Blogpost.Author</div>
+        <div class="blogpost-meta">Category: @Blogpost.Category?.Name</div>
+        <div class="blogpost-meta">Posted on: @Blogpost.DateCreated.ToString("yyyy-MM-dd")</div>
+    </div>
+}
+else
+{
+    <p>Loading blog post...</p>
+}

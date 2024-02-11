@@ -1,0 +1,38 @@
+﻿@page "/blogcategorys/create/"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+<h3 class="card-title">Create New Blog Category</h3>
+<hr />
+<br />
+
+<FormComponent ButtonText="Create Blogcategory" blogcategory="blogcategory" OnValidSubmit="@CreateBlogcategory" />
+
+@* <EditForm Model="@blogcategory" OnValidSubmit="CreateBlogcategory">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Name: </label>
+        <div>
+            <InputText @bind-Value="@blogcategory.Name" class="form-control" />
+            <ValidationMessage For="@(() => blogcategory.Name)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-block">
+        Create Blogcategory
+    </button>
+
+</EditForm> *@
+
+@code {
+
+    Blogcategory blogcategory = new Blogcategory();
+
+    private async Task CreateBlogcategory()
+    {
+        await _client.PostAsJsonAsync(Endpoints.BlogcategorysEndpoint, blogcategory);
+        _navManager.NavigateTo("/blogcategorys/");
+    }
+}

@@ -1,0 +1,86 @@
+﻿@page "/blogcategorys/"
+@inject HttpClient _client
+@inject IJSRuntime js
+@attribute [Authorize]
+@inject HttpInterceptorService _interceptor
+@implements IDisposable
+
+<h3 class="card-title">Blog Category</h3>
+<br />
+
+<a href="/blogcategorys/create" class="btn btn-secondary">
+    <span class="oi oi-plus"></span>
+    Create New Blog Category
+</a>
+<br />
+<br />
+
+@if (Blogcategorys == null)
+{
+    <div class="alert alert-info">Loading Blogcategorys...</div>
+}
+else
+{
+    <table class="table table-responsive" id="blogcategorysTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var blogcategory in Blogcategorys)
+            {
+                <tr>
+                    <td>@blogcategory.Name</td>
+                    <td>
+                        <a href="/blogcategorys/view/@blogcategory.Id" class="btn btn-primary">
+                            <span class="oi oi-book"></span>
+                        </a>
+                        <a href="/blogcategorys/edit/@blogcategory.Id" class="btn btn-warning">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(blogcategory.Id))">
+                            <span class="oi oi-delete"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Blogcategory>? Blogcategorys;
+
+    protected async override Task OnInitializedAsync()
+    {
+        _interceptor.MonitorEvent();
+        Blogcategorys = await _client.GetFromJsonAsync<List<Blogcategory>>($"{Endpoints.BlogcategorysEndpoint}");
+    }
+
+    async Task Delete(int blogcategoryId)
+    {
+        if (Blogcategorys != null)
+        {
+            var blogcategory = Blogcategorys.First(q => q.Id == blogcategoryId);
+            var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {blogcategory.Name}?");
+            if (confirm)
+            {
+                await _client.DeleteAsync($"{Endpoints.BlogcategorysEndpoint}/{blogcategoryId}");
+                await OnInitializedAsync();
+            }
+        }
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await js.InvokeVoidAsync("AddDataTable", "#blogcategorysTable");
+    }
+
+    public void Dispose()
+    {
+        _interceptor.DisposeEvent();
+        js.InvokeVoidAsync("DataTablesDispose", "#blogcategorysTable");
+    }
+}
