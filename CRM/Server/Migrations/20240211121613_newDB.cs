@@ -55,12 +55,29 @@ namespace CRM.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Colours",
+                name: "Blogcategorys",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Blogcategorys", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Colours",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -77,12 +94,12 @@ namespace CRM.Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DrivingLicense = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DrivingLicense = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -136,7 +153,7 @@ namespace CRM.Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -153,7 +170,7 @@ namespace CRM.Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -291,13 +308,41 @@ namespace CRM.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Blogposts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Author = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Blogposts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Blogposts_Blogcategorys_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Blogcategorys",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Vehicles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Year = table.Column<int>(type: "int", nullable: false),
-                    LicensePlateNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LicensePlateNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MakeId = table.Column<int>(type: "int", nullable: false),
                     ModelId = table.Column<int>(type: "int", nullable: false),
                     ColourId = table.Column<int>(type: "int", nullable: false),
@@ -337,7 +382,7 @@ namespace CRM.Server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateOut = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateIn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateIn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     VehicleId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -374,15 +419,15 @@ namespace CRM.Server.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "3781efa7-66dc-47f0-860f-e506d04102e4", 0, "e0e84281-7afc-4a28-b882-dcf242d5733a", "admin@localhost.com", false, "Admin", "User", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAECJ4OgDQdsJEvTBL+3B/mR6h93EaxDGLEdzzhCsQqqCm3e61aXBPKJZNmmE9MexYUA==", null, false, "c1a87d75-4cd9-4b99-afac-24b69883d120", false, "admin@localhost.com" });
+                values: new object[] { "3781efa7-66dc-47f0-860f-e506d04102e4", 0, "63bc0239-be42-4ffd-8e44-c0a07b877a0a", "admin@localhost.com", false, "Admin", "User", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAEO0uZQ2IK8V97o1Di5PYND/6ooNr7MQSb4YF4RJ46etogmYbScyjrBQxLs7myoXhww==", null, false, "7400ed0d-2693-4e66-8915-2af4393abd05", false, "admin@localhost.com" });
 
             migrationBuilder.InsertData(
                 table: "Colours",
                 columns: new[] { "Id", "CreatedBy", "DateCreated", "DateUpdated", "Name", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1, "System", new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7376), new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7390), "Black", "System" },
-                    { 2, "System", new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7392), new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7393), "Blue", "System" }
+                    { 1, "System", new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(5576), new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(5588), "Black", "System" },
+                    { 2, "System", new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(5590), new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(5591), "Blue", "System" }
                 });
 
             migrationBuilder.InsertData(
@@ -390,8 +435,8 @@ namespace CRM.Server.Migrations
                 columns: new[] { "Id", "CreatedBy", "DateCreated", "DateUpdated", "Name", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1, "System", new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7724), new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7725), "BMW", "System" },
-                    { 2, "System", new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7726), new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7727), "Toyota", "System" }
+                    { 1, "System", new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(5938), new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(5939), "BMW", "System" },
+                    { 2, "System", new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(5941), new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(5941), "Toyota", "System" }
                 });
 
             migrationBuilder.InsertData(
@@ -399,10 +444,10 @@ namespace CRM.Server.Migrations
                 columns: new[] { "Id", "CreatedBy", "DateCreated", "DateUpdated", "Name", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1, "System", new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7925), new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7926), "3 Series", "System" },
-                    { 2, "System", new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7928), new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7928), "X5", "System" },
-                    { 3, "System", new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7929), new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7930), "Prius", "System" },
-                    { 4, "System", new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7931), new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7932), "Rav4", "System" }
+                    { 1, "System", new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(6198), new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(6200), "3 Series", "System" },
+                    { 2, "System", new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(6202), new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(6202), "X5", "System" },
+                    { 3, "System", new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(6204), new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(6205), "Prius", "System" },
+                    { 4, "System", new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(6206), new DateTime(2024, 2, 11, 20, 16, 13, 530, DateTimeKind.Local).AddTicks(6207), "Rav4", "System" }
                 });
 
             migrationBuilder.InsertData(
@@ -448,6 +493,11 @@ namespace CRM.Server.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Blogposts_CategoryId",
+                table: "Blogposts",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_CustomerId",
@@ -530,6 +580,9 @@ namespace CRM.Server.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Blogposts");
+
+            migrationBuilder.DropTable(
                 name: "Bookings");
 
             migrationBuilder.DropTable(
@@ -546,6 +599,9 @@ namespace CRM.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Blogcategorys");
 
             migrationBuilder.DropTable(
                 name: "Customers");

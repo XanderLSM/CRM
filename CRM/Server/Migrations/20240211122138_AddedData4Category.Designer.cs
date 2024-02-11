@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRM.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240210125143_newDB")]
-    partial class newDB
+    [Migration("20240211122138_AddedData4Category")]
+    partial class AddedData4Category
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,7 +100,7 @@ namespace CRM.Server.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e0e84281-7afc-4a28-b882-dcf242d5733a",
+                            ConcurrencyStamp = "eb07e0d5-f6f6-49b2-8b03-bc04f8d7f77b",
                             Email = "admin@localhost.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
@@ -108,12 +108,108 @@ namespace CRM.Server.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECJ4OgDQdsJEvTBL+3B/mR6h93EaxDGLEdzzhCsQqqCm3e61aXBPKJZNmmE9MexYUA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMI22GVeH0DeY+n5xjiPQfcY9/0iYBUemihLztlQWgue8mdej7CRF96hhq6PuM964Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c1a87d75-4cd9-4b99-afac-24b69883d120",
+                            SecurityStamp = "71ff82e0-a07d-4016-996f-1d48c15ae6b5",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
+                });
+
+            modelBuilder.Entity("CRM.Shared.Domain.Blogcategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Blogcategorys");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedBy = "System",
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 222, DateTimeKind.Local).AddTicks(1566),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 222, DateTimeKind.Local).AddTicks(1582),
+                            Name = "Tips N Tricks",
+                            UpdatedBy = "System"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedBy = "System",
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 222, DateTimeKind.Local).AddTicks(1585),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 222, DateTimeKind.Local).AddTicks(1585),
+                            Name = "Finance",
+                            UpdatedBy = "System"
+                        });
+                });
+
+            modelBuilder.Entity("CRM.Shared.Domain.Blogpost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Blogposts");
                 });
 
             modelBuilder.Entity("CRM.Shared.Domain.Booking", b =>
@@ -127,13 +223,14 @@ namespace CRM.Server.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateIn")
+                    b.Property<DateTime?>("DateIn")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateOut")
@@ -145,7 +242,8 @@ namespace CRM.Server.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VehicleId")
+                    b.Property<int?>("VehicleId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -175,6 +273,7 @@ namespace CRM.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
@@ -189,8 +288,8 @@ namespace CRM.Server.Migrations
                         {
                             Id = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7376),
-                            DateUpdated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7390),
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(8505),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(8515),
                             Name = "Black",
                             UpdatedBy = "System"
                         },
@@ -198,8 +297,8 @@ namespace CRM.Server.Migrations
                         {
                             Id = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7392),
-                            DateUpdated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7393),
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(8517),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(8518),
                             Name = "Blue",
                             UpdatedBy = "System"
                         });
@@ -217,6 +316,7 @@ namespace CRM.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
@@ -229,16 +329,22 @@ namespace CRM.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DrivingLicense")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -266,6 +372,7 @@ namespace CRM.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
@@ -280,8 +387,8 @@ namespace CRM.Server.Migrations
                         {
                             Id = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7724),
-                            DateUpdated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7725),
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(8820),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(8820),
                             Name = "BMW",
                             UpdatedBy = "System"
                         },
@@ -289,8 +396,8 @@ namespace CRM.Server.Migrations
                         {
                             Id = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7726),
-                            DateUpdated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7727),
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(8822),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(8822),
                             Name = "Toyota",
                             UpdatedBy = "System"
                         });
@@ -314,6 +421,7 @@ namespace CRM.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
@@ -328,8 +436,8 @@ namespace CRM.Server.Migrations
                         {
                             Id = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7925),
-                            DateUpdated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7926),
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(9026),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(9026),
                             Name = "3 Series",
                             UpdatedBy = "System"
                         },
@@ -337,8 +445,8 @@ namespace CRM.Server.Migrations
                         {
                             Id = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7928),
-                            DateUpdated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7928),
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(9028),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(9028),
                             Name = "X5",
                             UpdatedBy = "System"
                         },
@@ -346,8 +454,8 @@ namespace CRM.Server.Migrations
                         {
                             Id = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7929),
-                            DateUpdated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7930),
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(9029),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(9030),
                             Name = "Prius",
                             UpdatedBy = "System"
                         },
@@ -355,8 +463,8 @@ namespace CRM.Server.Migrations
                         {
                             Id = 4,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7931),
-                            DateUpdated = new DateTime(2024, 2, 10, 20, 51, 43, 821, DateTimeKind.Local).AddTicks(7932),
+                            DateCreated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(9032),
+                            DateUpdated = new DateTime(2024, 2, 11, 20, 21, 38, 172, DateTimeKind.Local).AddTicks(9032),
                             Name = "Rav4",
                             UpdatedBy = "System"
                         });
@@ -370,7 +478,8 @@ namespace CRM.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ColourId")
+                    b.Property<int?>("ColourId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
@@ -383,12 +492,15 @@ namespace CRM.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LicensePlateNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MakeId")
+                    b.Property<int?>("MakeId")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int>("ModelId")
+                    b.Property<int?>("ModelId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<double>("RentalRate")
@@ -708,6 +820,15 @@ namespace CRM.Server.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("CRM.Shared.Domain.Blogpost", b =>
+                {
+                    b.HasOne("CRM.Shared.Domain.Blogcategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("CRM.Shared.Domain.Booking", b =>

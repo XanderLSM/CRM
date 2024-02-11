@@ -22,6 +22,11 @@ namespace CRM.Server.Data
         public DbSet<Model> Models { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Blogpost> Blogposts { get; set; }
+        public DbSet<Blogcategory> Blogcategorys { get; set; }
+        public DbSet<Blogcomment> Blogcomments { get; set; }
+
+    
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,6 +37,7 @@ namespace CRM.Server.Data
             builder.ApplyConfiguration(new RoleSeedConfiguration());
             builder.ApplyConfiguration(new UserSeedConfiguration());
             builder.ApplyConfiguration(new UserRoleSeedConfiguration());
+            builder.ApplyConfiguration(new BlogcategorySeedConfiguration());
         }
     }
 }
