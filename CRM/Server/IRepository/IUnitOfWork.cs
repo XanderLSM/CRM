@@ -17,5 +17,8 @@ namespace CRM.Server.IRepository
         IGenericRepository<Colour> Colours { get; }
         IGenericRepository<Booking> Bookings { get; }
         IGenericRepository<Customer> Customers { get; }
+        IGenericRepository<Blogpost> Blogposts { get; }
+        IGenericRepository<Blogcategory> Blogcategorys{ get; }
+        IGenericRepository<Blogcomment> Blogcomments { get; }
     }
 }

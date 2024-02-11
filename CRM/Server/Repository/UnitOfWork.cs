@@ -23,6 +23,9 @@ namespace CRM.Server.Repository
         private IGenericRepository<Booking> _bookings;
         private IGenericRepository<Customer> _customers;
         private IGenericRepository<Vehicle> _vehicles;
+        private IGenericRepository<Blogpost> _blogposts;
+        private IGenericRepository<Blogcategory> _blogcategorys;
+        private IGenericRepository<Blogcomment> _blogcomments;
 
         private UserManager<ApplicationUser> _userManager;
 
@@ -44,6 +47,12 @@ namespace CRM.Server.Repository
             => _bookings ??= new GenericRepository<Booking>(_context);
         public IGenericRepository<Customer> Customers
             => _customers ??= new GenericRepository<Customer>(_context);
+        public IGenericRepository<Blogpost> Blogposts
+            => _blogposts ??= new GenericRepository<Blogpost>(_context);
+        public IGenericRepository<Blogcategory> Blogcategorys
+            => _blogcategorys ??= new GenericRepository<Blogcategory>(_context);
+        public IGenericRepository<Blogcomment> Blogcomments
+            => _blogcomments ??= new GenericRepository<Blogcomment>(_context);
 
         public void Dispose()
         {
