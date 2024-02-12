@@ -72,7 +72,7 @@ namespace CRM.Server.Controllers
         [HttpGet("slug/{slug}")]
         public async Task<IActionResult> GetBlogpostBySlug(string slug)
         {
-            var blogpost = await _unitOfWork.Blogposts.Get(q => q.Url == slug);
+            var blogpost = await _unitOfWork.Blogposts.Get(q => q.Url == slug, includes: q => q.Include(x => x.Category));
             if (blogpost == null)
             {
                 return NotFound();

@@ -54,6 +54,8 @@ namespace CRM.Server.Repository
         public IGenericRepository<Blogcomment> Blogcomments
             => _blogcomments ??= new GenericRepository<Blogcomment>(_context);
 
+
+
         public void Dispose()
         {
             _context.Dispose();

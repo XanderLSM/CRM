@@ -23,5 +23,7 @@ namespace CRM.Shared.Domain
 
         public int? CategoryId { get; set; }
 
+        public virtual List<Blogcomment>? Comments { get; set; }
+
     }
 }

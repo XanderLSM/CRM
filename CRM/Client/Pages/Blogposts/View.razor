@@ -1,6 +1,8 @@
 ﻿@page "/blogposts/view/{Url}"
-@inject HttpClient HttpClient
-@inject NavigationManager NavigationManager
+@inject HttpClient _client
+@inject IJSRuntime js
+@inject NavigationManager _navManager
+
 
 <style>
     .blogpost-container {
@@ -45,11 +47,16 @@
 
     private Blogpost Blogpost;
 
+    private IList<Blogcategory>? Blogcategorys;
+
+
     protected override async Task OnInitializedAsync()
     {
+        Blogcategorys = await _client.GetFromJsonAsync<List<Blogcategory>>($"{Endpoints.BlogcategorysEndpoint}");
+        
         if (!string.IsNullOrWhiteSpace(Url))
         {
-            Blogpost = await HttpClient.GetFromJsonAsync<Blogpost>($"api/Blogposts/slug/{Url}");
+            Blogpost = await _client.GetFromJsonAsync<Blogpost>($"api/Blogposts/slug/{Url}");
         }
     }
 }
